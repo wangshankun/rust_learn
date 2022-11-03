@@ -15,10 +15,10 @@ fn main() {
     let v_shared = v.clone();
     let t = thread::spawn(move || {
         let mut v_t =  v_shared.lock().unwrap();
-	    v_t.0 = 6 as *const u8;  //access member using index 0
+        v_t.0 = 6 as *const u8;  //access member using index 0
     });
-	println!("{:?}",v.lock().unwrap());
+    println!("{:?}",v.lock().unwrap());
     t.join().unwrap(); //wait sub thread exec
-	println!("{:?}",v.lock().unwrap());
-	println!("{:?}",v);
+    println!("{:?}",v.lock().unwrap());
+    println!("{:?}",v);
 }
