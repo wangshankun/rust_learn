@@ -1,0 +1,24 @@
+//https://course.rs/advance/concurrency-with-threads/send-sync.html
+
+use std::thread;
+use std::sync::Arc;
+use std::sync::Mutex;
+
+#[derive(Debug)]
+struct MyBox(*const u8);
+unsafe impl Send for MyBox {}
+unsafe impl Sync for MyBox {}
+
+fn main() {
+    let b = MyBox(5 as *const u8);
+    let v = Arc::new(Mutex::new(b)); //b move to v
+	  let v_shared = v.clone();
+    let t = thread::spawn(move || {
+        let mut v_t =  v_shared.lock().unwrap();
+		    v_t.0 = 6 as *const u8;  //access member using index 0
+    });
+	println!("{:?}",v.lock().unwrap());
+  t.join().unwrap(); //wait sub thread exec
+	println!("{:?}",v.lock().unwrap());
+	println!("{:?}",v);
+}
