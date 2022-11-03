@@ -12,13 +12,13 @@ unsafe impl Sync for MyBox {}
 fn main() {
     let b = MyBox(5 as *const u8);
     let v = Arc::new(Mutex::new(b)); //b move to v
-	  let v_shared = v.clone();
+    let v_shared = v.clone();
     let t = thread::spawn(move || {
         let mut v_t =  v_shared.lock().unwrap();
-		    v_t.0 = 6 as *const u8;  //access member using index 0
+	    v_t.0 = 6 as *const u8;  //access member using index 0
     });
 	println!("{:?}",v.lock().unwrap());
-  t.join().unwrap(); //wait sub thread exec
+    t.join().unwrap(); //wait sub thread exec
 	println!("{:?}",v.lock().unwrap());
 	println!("{:?}",v);
 }
